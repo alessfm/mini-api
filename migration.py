@@ -10,25 +10,25 @@ db = SQLAlchemy(app)
 
 with app.app_context():
   class User(db.Model):
-      id = db.Column(db.Integer, primary_key = True)
-      name = db.Column(db.String(150), nullable = False)
-      email = db.Column(db.String(100), unique = True, nullable = False)
-      created_at = db.Column(db.DateTime(timezone = True), server_default = func.now())
-      posts = db.relationship("Post", backref="user", cascade = "all, delete")
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(150), nullable = False)
+    email = db.Column(db.String(100), unique = True, nullable = False)
+    created_at = db.Column(db.DateTime(timezone = True), server_default = func.now())
+    posts = db.relationship("Post", backref="user", cascade = "all, delete")
 
-      def __repr__(self):
-          return f"<User {self.name}>"
+    def to_json(self):
+      return {"id": self.id, "nome": self.name, "email": self.email}
 
 
   class Post(db.Model):
-      id = db.Column(db.Integer, primary_key = True)
-      user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-      title = db.Column(db.String(50))
-      content = db.Column(db.Text)
-      created_at = db.Column(db.DateTime(timezone = True), server_default = func.now())
+    id = db.Column(db.Integer, primary_key = True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    title = db.Column(db.String(50))
+    content = db.Column(db.Text)
+    created_at = db.Column(db.DateTime(timezone = True), server_default = func.now())
 
-      def __repr__(self):
-          return f"<Post {self.title}>"
+    def to_json(self):
+      return {"id": self.id, "idUsuario": self.user_id, "titulo": self.title}
 
 
   db.drop_all()
